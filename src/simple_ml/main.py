@@ -51,12 +51,10 @@ def main():
     print("\n\nEvaluating:")
     model.eval()
     model = torch.inference_mode()(model)
-    correct_count, total = 0, 0
+    correct_count = 0, 0
     for x_batch, y_batch in evaluation_loader:
         predictions = model(x_batch)
         correct_count += int(metrics.accuracy(predictions, y_batch).sum().item())
-        total += len(x_batch)
-        print(f"Correctly classified: {correct_count: 4d}/{total: 4d}, Accuracy: {correct_count/total:.1%}", end="\r")
     print(f"Validation Accuracy: {correct_count / len(evaluation_data):.1%}")
 
 
