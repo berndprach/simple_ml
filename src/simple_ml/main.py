@@ -51,7 +51,7 @@ def main():
     print("\n\nEvaluating:")
     model.eval()
     model = torch.inference_mode()(model)
-    correct_count = 0, 0
+    correct_count = 0
     for x_batch, y_batch in evaluation_loader:
         predictions = model(x_batch)
         correct_count += int(metrics.accuracy(predictions, y_batch).sum().item())
