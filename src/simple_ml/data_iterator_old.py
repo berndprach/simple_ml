@@ -1,6 +1,6 @@
 import random
 from collections.abc import Sequence
-from typing import Callable, Iterable
+from typing import Iterable, Callable
 
 import torch
 
@@ -15,7 +15,6 @@ def shuffle(i: Iterable) -> Iterable:
         i = list(i)
         random.shuffle(i)
     yield from i
-
 
 
 def repeat(i: Iterable, n: int):
@@ -36,10 +35,12 @@ def batch(i: Iterable, batch_size) -> Iterable:
         yield current_batch
 
 
-def tensor_stack(i: Iterable) -> Iterable:
-    for element_tuple in i:
+def batch_tensor(i: Iterable, batch_size) -> Iterable:
+    for element_batch in batch(i, batch_size):
+        if isinstance(element_batch, torch.Tensor):
+            yield element_batch
         # [(x1, y1), (x2, y3), ...] -> [stack(x1, x2, ..), stack(y1, y2, ...)]
-        yield (torch.stack(list_of_tensors) for list_of_tensors in zip(*element_tuple))
+        yield (torch.stack(x_list) for x_list in zip(*element_batch))
 
 
 def to_device(i: Iterable, device) -> Iterable:
@@ -79,13 +80,9 @@ class DataIterator:
     def __init__(self, data: list):
         self.data = data
         self.iterator = iter(data)
-        self.length = len(data)
 
     def __iter__(self):
         yield from self.iterator
-
-    def __len__(self):
-        return self.length
 
     def shuffle(self):
         self.iterator = shuffle(self.iterator)
@@ -93,16 +90,15 @@ class DataIterator:
 
     def repeat(self, n):
         self.iterator = repeat(self.iterator, n)
-        self.length = self.length * n
         return self
 
-    def batch(self, batch_size, stack=False):
-        self.iterator = batch(self.iterator, batch_size)
-        if stack:
-            self.iterator = tensor_stack(self.iterator)
-        self.length = self.length // batch_size + (0 if self.length % batch_size == 0 else 1)
+    def batch(self, batch_size):
+        self.iterator = batch_tensor(self.iterator, batch_size)
         return self
 
+    def batch_tensor(self, batch_size):
+        self.iterator = batch_tensor(self.iterator, batch_size)
+        return self
 
     def to(self, device):
         self.iterator = to_device(self.iterator, device)
