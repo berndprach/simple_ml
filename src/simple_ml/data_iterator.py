@@ -103,7 +103,6 @@ class DataIterator:
         self.length = self.length // batch_size + (0 if self.length % batch_size == 0 else 1)
         return self
 
-
     def to(self, device):
         self.iterator = to_device(self.iterator, device)
         return self
