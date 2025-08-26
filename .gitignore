@@ -1,5 +1,5 @@
 # Python-generated files
-.idea
+.idea/
 __pycache__/
 *.py[oc]
 build/
