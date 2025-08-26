@@ -4,32 +4,13 @@ import torch
 from torch.nn.functional import cross_entropy
 
 
-
-class _MetaAbstractDtype(type):
-    def __getitem__(cls, item):
-        # return cls
-        return torch.Tensor
-
-
-class Tensor(metaclass=_MetaAbstractDtype):
-    pass
-
-
-class FloatTensor(metaclass=_MetaAbstractDtype):
-    pass
-
-
-class IntegerTensor(metaclass=_MetaAbstractDtype):
-    pass
+FloatTensor = torch.Tensor
+IntegerTensor = torch.Tensor
 
 
 
 class Metric(Protocol):
-    def __call__(self,
-                 prediction_scores: FloatTensor["shape [b, c]"],
-                 s: FloatTensor,
-                 labels: IntegerTensor["shape [b]"]
-                 ) -> FloatTensor["shape [b]"]:
+    def __call__(self, prediction_scores: FloatTensor, labels: IntegerTensor) -> FloatTensor:
         ...
 
 
