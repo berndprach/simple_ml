@@ -63,11 +63,12 @@ def rescale_x(i: Iterable, factor) -> Iterable:
         x, *rest = xy
         yield x * factor, *rest
 
+
 def center_x(i: Iterable, mean) -> Iterable:
     # Mean: torch.tensor with matching dimensions for broadcasting!
     for xy in i:
         x, *rest = xy
-        yield x - mean, *rest
+        yield x - mean.to(x.device), *rest
 
 
 def apply_to_x(i: Iterable, fn: Callable) -> Iterable:
