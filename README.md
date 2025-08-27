@@ -7,9 +7,7 @@ While this simplifies model training, it can obscure the underlying mechanics
 and make it harder to understand or customize various required steps.
 
 Therefore, in this repository we aim for **explicitness**,
-e.g. in the [data pipeline](src/simple_ml/data_iterator.py). 🧾
-We also strive for a more pythonic way, e.g. in our implementation of the 
-[training step](src/simple_ml/training_step.py). 🐍
+e.g. in the [data pipeline](src/simple_ml/data_iterator.py).
 
 For the training scripts, see [main.py](src/simple_ml/main.py)
 
